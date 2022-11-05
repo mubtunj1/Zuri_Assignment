@@ -2,36 +2,34 @@ from django.db import models
 from datetime import datetime
 
 
-#Creating (3)models Artiste, Song and Lyrics here.
+# Create your models here.
+
 class Artiste(models.Model):
-    # class attribute for artiste
-    first_name = models.CharField(max_length=200)
-    last_name = models.CharField(max_length=200)
+    '''A class that creates the Artist table'''
+    first_name = models.CharField(max_length=128)
+    last_name = models.CharField(max_length=128)
     age = models.IntegerField()
 
     def __str__(self):
-        return (self.first_name)    #specifing string method
-
-    
+        return f"{self.first_name} {self.last_name}"
 
 class Song(models.Model):
-    # class attribute for song
-    artiste = models.ForeignKey("Artiste", on_delete=models.CASCADE)
-    title =models.CharField(max_length=100)
-    date_released = models.DateField(default=datetime.today)
-    likes = models.IntegerField()
-    artiste_Id = models.IntegerField()
-    
-    def __str__(self):
-        return (self.title) #specifing string method
+    '''Initiates the Song table'''
+    title = models.CharField(max_length=128)
+    date_released = models.DateField()
+    likes = models.IntegerField()     
+    artiste_id = models.ForeignKey(Artiste, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"{self.title}"
 
 class Lyric(models.Model):
-    song = models.ForeignKey("Song", on_delete=models.CASCADE)
-    content = models.TextField() #attribute for lyrics
-    song_Id = models.IntegerField()
-    
+    '''Initiates the lyric table'''
+    content = models.TextField()
+    song_id = models.ForeignKey(Song, on_delete=models.CASCADE)
 
     def __str__(self):
-        return(self.song)    #specifing string method
-    
+        if len(self.content) > 50:
+            return f"{self.content[0:50]}..."
+        else:
+            return f"{self.content}"    
